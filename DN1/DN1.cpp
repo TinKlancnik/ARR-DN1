@@ -1,20 +1,81 @@
-// DN1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <fstream>
+#include <vector>
 
-int main()
+using namespace std;
+
+// Stable counting sort algorithm for sorting the bits
+void countingSort(vector<unsigned char>& arr, int exp)
 {
-    std::cout << "Hello World!\n";
+    vector<unsigned char> output(arr.size());
+    vector<int> count(2, 0);
+
+    for (int i = 0; i < arr.size(); i++) {
+        count[(arr[i] >> exp) & 1]++;
+    }
+
+    for (int i = 1; i < count.size(); i++) {
+        count[i] += count[i - 1];
+    }
+
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        output[count[(arr[i] >> exp) & 1] - 1] = arr[i];
+        count[(arr[i] >> exp) & 1]--;
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+        arr[i] = output[i];
+    }
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+// Binary Radix sort algorithm
+void radixSort(vector<unsigned char>& arr)
+{
+    int maxVal = 255; // maximum value of 8-bit unsigned integer
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+    // Sort each bit using counting sort algorithm
+    for (int exp = 0; maxVal >> exp > 0; exp++) {
+        countingSort(arr, exp);
+    }
+}
+
+int main(int argc, char* argv[])
+{
+    cout << "File" << argv[1] << endl;
+    // Check if input file is provided
+    if (argc != 2) {
+        cout << "Usage: " << argv[0] << " <input_file>\n";
+        return 1;
+    }
+
+    // Open input file
+    ifstream inputFile(argv[1]);
+    if (!inputFile) {
+        cout << "Error: Could not open input file\n";
+        return 1;
+    }
+
+    // Read input numbers into vector
+    vector<unsigned char> numbers;
+    unsigned char num;
+    while (inputFile >> num) {
+        numbers.push_back(num);
+    }
+
+    // Sort the numbers using Binary Radix sort algorithm
+    radixSort(numbers);
+
+    // Open output file
+    ofstream outputFile("out.txt");
+    if (!outputFile) {
+        cout << "Error: Could not open output file\n";
+        return 1;
+    }
+
+    // Write sorted numbers to output file
+    for (const auto& num : numbers) {
+        outputFile << static_cast<int>(num) << " ";
+    }
+
+    return 0;
+}
