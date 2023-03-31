@@ -65,6 +65,5 @@ int main(int argc, char* argv[])
     readFromFile(argv[1], numbers);
     radixSort(numbers);
     saveToFile("out.txt", numbers);
-
     return 0;
 }
