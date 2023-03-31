@@ -17,6 +17,7 @@ void readFromFile(const string& filename, vector<int>& numbers) {
 
 void countingSort(vector<int>& arr, int exp)
 {
+    //sortiramo stevila glede na bit 
     vector<int> output(arr.size());
     vector<int> count(2, 0);
 
@@ -40,13 +41,14 @@ void countingSort(vector<int>& arr, int exp)
 
 void radixSort(vector<int>& arr)
 {
+    //najdemo stevilo bitov za najvišje število
     int maxVal = INT_MIN;
     for (const auto& num : arr) {
         if (num > maxVal) {
             maxVal = num;
         }
     }
-
+    //sprehodimo se èez bite
     for (int k = 0; maxVal >> k > 0; k++) {
        countingSort(arr, k);
     }
@@ -62,8 +64,11 @@ void saveToFile(const string& filename, const vector<int>& numbers) {
 int main(int argc, char* argv[])
 {
     vector<int> numbers;
+    //vektor napolnimo s stevili
     readFromFile(argv[1], numbers);
+    //stevila uredimo
     radixSort(numbers);
+    //urejena stevila shranimo
     saveToFile("out.txt", numbers);
     return 0;
 }
