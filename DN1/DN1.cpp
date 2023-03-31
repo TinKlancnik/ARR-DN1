@@ -7,36 +7,32 @@ using namespace std;
 
 void readFromFile(const string& filename, vector<int>& numbers) {
 
-
-    // Open input file
-    ifstream inputFile(filename);
-    if (!inputFile) {
-        cout << "Error: Could not open input file\n";
-        return;
-    }
-
-    string line;
-    while (getline(inputFile, line)) {
-        istringstream iss(line);
-        int num;
-        while (iss >> num) {
-            numbers.push_back(num);
-        }
+    ifstream file(filename);
+    if (file) {
+        copy(std::istream_iterator<int>(file),
+            istream_iterator<int>(),
+            back_inserter(numbers));
     }
 }
+
 void radixSort(vector<int>& arr)
 {
-    int maxVal = 255;
+    int maxVal = INT_MIN;
+    for (const auto& num : arr) {
+        if (num > maxVal) {
+            maxVal = num;
+        }
+    }
 
     for (int k = 0; maxVal >> k > 0; k++) {
-        //countingSort(arr, exp);
+       // countingSort(arr, k);
     }
 }
-
 int main(int argc, char* argv[])
 {
     vector<int> numbers;
     readFromFile(argv[1], numbers);
+    radixSort(numbers);
 
     return 0;
 }
