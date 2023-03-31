@@ -38,7 +38,6 @@ void countingSort(vector<int>& arr, int exp)
     }
 }
 
-
 void radixSort(vector<int>& arr)
 {
     int maxVal = INT_MIN;
@@ -52,11 +51,20 @@ void radixSort(vector<int>& arr)
        countingSort(arr, k);
     }
 }
+
+void saveToFile(const string& filename, const vector<int>& numbers) {
+    ofstream file(filename);
+    if (file) {
+        copy(numbers.begin(), numbers.end(), ostream_iterator<int>(file, "\n"));
+    }
+}
+
 int main(int argc, char* argv[])
 {
     vector<int> numbers;
     readFromFile(argv[1], numbers);
     radixSort(numbers);
+    saveToFile("out.txt", numbers);
 
     return 0;
 }
